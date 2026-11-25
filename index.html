@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="vi">
+<html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Xưởng May 3D</title>
+<title>3D 成衣工廠</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
@@ -117,58 +117,84 @@ h1{margin:0;font:800 22px/1 var(--display);letter-spacing:.01em}
   .lbl{font-size:10px}
 }
 @media (prefers-reduced-motion:reduce){#vig.on{animation:none;box-shadow:inset 0 0 120px 20px #ff2a2a55}}
+
+/* Locale and UI appearance controls; original dark HUD remains the default. */
+#prefs{display:flex;gap:6px;align-items:flex-start}
+#prefs .btn{min-height:36px;white-space:nowrap;font-family:var(--body)}
+html[lang="zh-Hant"]{--display:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;--body:var(--display)}
+:root[data-theme="light"]{--panel:#f8fafc;--panel-2:#e2e8f0;--edge:#a9b9cd;--text:#17283c;--muted:#475569;--sky-top:#c7e7f5;--sky-bot:#f1f6e9;--exit:#087a49}
+[data-theme="light"] .panel,[data-theme="light"] .chip{box-shadow:0 4px 0 #64748b55,0 12px 30px #33415522}
+[data-theme="light"] #q,[data-theme="light"] .kv div,[data-theme="light"] .eff,[data-theme="light"] .xp .bar{background:#fff}
+[data-theme="light"] #card p{color:#334155}
+[data-theme="light"] .btn,[data-theme="light"] .ln{border-bottom-color:#b8c6d7}
+[data-theme="light"] .btn.on{background:#cbdcf0}
+[data-theme="light"] .btn.y{border-bottom-color:var(--safety-dk)}
+[data-theme="light"] .btn.r{border-bottom-color:#b02a2f}
+[data-theme="light"] .rank{color:#2a2000}
+[data-theme="light"] .lbl.major{box-shadow:0 3px 0 #64748b55}
+[data-theme="light"] .lbl.exit{background:#3ddc84;color:#06361c}
+@media(max-width:720px){
+ #prefs{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px))}
+ #prefs .btn{padding:8px 7px 6px;min-height:32px}
+ #brand{max-width:calc(100vw - 132px);box-sizing:border-box}
+ #brand h1{font-size:18px}
+ #brand .logo{flex-shrink:0;width:30px;height:30px}
+ #brand .eyebrow{font-size:9px}
+}
+@media(min-width:721px) and (max-width:950px){#stats{max-width:calc(100vw - 245px)}#prefs .btn{padding:7px 8px 5px}}
 </style>
 </head>
 <body>
 
 <div id="app">
-  <canvas id="c" aria-label="Mô hình 3D xưởng may"></canvas>
+  <canvas id="c" aria-label="成衣工廠 3D 模型" data-i18n-aria-label="Mô hình 3D xưởng may"></canvas>
   <div id="labels"></div>
   <div id="vig"></div>
-  <div id="loading">Đang dựng xưởng…</div>
+  <div id="loading" data-i18n="Đang dựng xưởng…">正在建立工廠模型…</div>
 
   <header id="brand" class="panel">
     <div class="logo" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#2a2000" stroke-width="2.2" stroke-linecap="round"><path d="M4 20 19 5"/><circle cx="20.2" cy="3.8" r="1.6"/><path d="M8 20c3-1 4-5 8-6"/></svg>
     </div>
-    <div><div class="eyebrow">平面圖 · Tầng 1 · 第1頁</div><h1>Xưởng May 3D</h1></div>
+    <div><div class="eyebrow" data-i18n="平面圖 · Tầng 1 · 第1頁">平面圖 · 1樓 · 第1頁</div><h1 data-i18n="Xưởng May 3D">3D 成衣工廠</h1></div>
   </header>
 
   <div id="stats">
-    <div class="chip c"><b>25</b><span>Chuyền may</span></div>
-    <div class="chip"><b id="sWorkers">0</b><span>Công nhân</span></div>
-    <div class="chip y"><b id="sZones">0</b><span>Khu vực</span></div>
-    <div class="chip g"><b>8</b><span>Lối thoát</span></div>
+    <div id="prefs"><button class="btn" id="langToggle" type="button" lang="vi" aria-label="切換語言" title="切換語言">Tiếng Việt</button><button class="btn" id="themeToggle" type="button" aria-label="淺色介面" title="淺色介面">☀</button></div>
+    <div class="chip c"><b>25</b><span data-i18n="Chuyền may">縫製線</span></div>
+    <div class="chip"><b id="sWorkers">0</b><span data-i18n="Công nhân">員工</span></div>
+    <div class="chip y"><b id="sZones">0</b><span data-i18n="Khu vực">區域</span></div>
+    <div class="chip g"><b>8</b><span data-i18n="Lối thoát">逃生出口</span></div>
   </div>
 
-  <aside id="dir" class="panel" aria-label="Danh sách khu vực">
+  <aside id="dir" class="panel" aria-label="區域清單" data-i18n-aria-label="Danh sách khu vực">
     <div class="hd">
-      <h2>Bản đồ khu vực</h2>
-      <div class="xp"><span class="rank" id="rank">Tân binh</span><div class="bar"><i id="xpbar"></i></div><span id="xptxt">0/0</span></div>
-      <input id="q" type="search" placeholder="Tìm khu vực, chuyền…" autocomplete="off">
+      <h2 data-i18n="Bản đồ khu vực">區域地圖</h2>
+      <div class="xp"><span class="rank" id="rank">新手</span><div class="bar"><i id="xpbar"></i></div><span id="xptxt">0/0</span></div>
+      <input id="q" type="search" placeholder="搜尋區域、產線…" data-i18n-placeholder="Tìm khu vực, chuyền…" autocomplete="off">
     </div>
     <div id="list"></div>
   </aside>
 
   <aside id="card" class="panel" hidden aria-live="polite"></aside>
 
-  <div id="mini" class="panel"><div class="t"><span>Sơ đồ mặt bằng</span><span>Bấm để bay tới</span></div><canvas id="mm"></canvas></div>
+  <div id="mini" class="panel"><div class="t"><span data-i18n="Sơ đồ mặt bằng">平面配置圖</span><span data-i18n="Bấm để bay tới">點擊前往</span></div><canvas id="mm"></canvas></div>
 
-  <nav id="bar" class="panel" aria-label="Điều khiển">
-    <button class="btn" id="dirToggle" type="button">☰ Khu vực</button>
-    <button class="btn" id="rotL" type="button" title="Xoay trái 90°" aria-label="Xoay trái"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 3v5h5"/></svg></button>
-    <button class="btn" id="rotR" type="button" title="Xoay phải 90°" aria-label="Xoay phải"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-3-6.2"/><path d="M20 3v5h-5"/></svg></button>
-    <button class="btn" id="home" type="button">Toàn cảnh</button>
-    <button class="btn" id="top" type="button">Nhìn từ trên</button>
+  <nav id="bar" class="panel" aria-label="操作控制" data-i18n-aria-label="Điều khiển">
+    <button class="btn" id="dirToggle" type="button" data-i18n="☰ Khu vực">☰ 區域</button>
+    <button class="btn" id="rotL" type="button" title="向左旋轉 90°" data-i18n-title="Xoay trái 90°" aria-label="向左旋轉" data-i18n-aria-label="Xoay trái"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 3v5h5"/></svg></button>
+    <button class="btn" id="rotR" type="button" title="向右旋轉 90°" data-i18n-title="Xoay phải 90°" aria-label="向右旋轉" data-i18n-aria-label="Xoay phải"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-3-6.2"/><path d="M20 3v5h-5"/></svg></button>
+    <button class="btn" id="home" type="button" data-i18n="Toàn cảnh">全景</button>
+    <button class="btn" id="top" type="button" data-i18n="Nhìn từ trên">俯視</button>
     <span class="sep"></span>
-    <button class="btn on" id="tAisle" type="button">Lối đi</button>
-    <button class="btn on" id="tLbl" type="button">Nhãn</button>
-    <button class="btn on" id="tWork" type="button">Công nhân</button>
-    <button class="btn on" id="tRoof" type="button">Mái nhà</button>
+    <button class="btn on" id="tAisle" type="button" data-i18n="Lối đi">通道</button>
+    <button class="btn on" id="tLbl" type="button" data-i18n="Nhãn">標籤</button>
+    <button class="btn on" id="tWork" type="button" data-i18n="Công nhân">員工</button>
+    <button class="btn on" id="tRoof" type="button" data-i18n="Mái nhà">屋頂</button>
     <span class="sep"></span>
-    <button class="btn r" id="drill" type="button">Diễn tập thoát hiểm</button>
+    <button class="btn r" id="drill" type="button" data-i18n="Diễn tập thoát hiểm">逃生演練</button>
   </nav>
-  <div id="hint">Kéo trái: di chuyển<br>Kéo phải / Ctrl: xoay<br>Cuộn: phóng to</div>
+  <div id="hint">Kéo trái: di chuyển<br>Kéo phải / Ctrl: xoay<br data-i18n="Cuộn: phóng to">滾輪：縮放</div>
   <div id="drillHud" hidden></div>
   <div id="tip" hidden></div>
 </div>
@@ -177,6 +203,308 @@ h1{margin:0;font:800 22px/1 var(--display);letter-spacing:.01em}
 <script>
 (()=>{
 const $=s=>document.querySelector(s);
+
+const UI={
+  "Xưởng May 3D": "3D 成衣工廠",
+  "平面圖 · Tầng 1 · 第1頁": "平面圖 · 1樓 · 第1頁",
+  "Mô hình 3D xưởng may": "成衣工廠 3D 模型",
+  "Đang dựng xưởng…": "正在建立工廠模型…",
+  "Chuyền may": "縫製線",
+  "Công nhân": "員工",
+  "Khu vực": "區域",
+  "Lối thoát": "逃生出口",
+  "Danh sách khu vực": "區域清單",
+  "Bản đồ khu vực": "區域地圖",
+  "Tân binh": "新手",
+  "Tìm khu vực, chuyền…": "搜尋區域、產線…",
+  "Sơ đồ mặt bằng": "平面配置圖",
+  "Bấm để bay tới": "點擊前往",
+  "Điều khiển": "操作控制",
+  "☰ Khu vực": "☰ 區域",
+  "Xoay trái 90°": "向左旋轉 90°",
+  "Xoay trái": "向左旋轉",
+  "Xoay phải 90°": "向右旋轉 90°",
+  "Xoay phải": "向右旋轉",
+  "Toàn cảnh": "全景",
+  "Nhìn từ trên": "俯視",
+  "Lối đi": "通道",
+  "Nhãn": "標籤",
+  "Mái nhà": "屋頂",
+  "Diễn tập thoát hiểm": "逃生演練",
+  "Kéo trái: di chuyển": "左鍵拖曳：移動",
+  "Kéo phải / Ctrl: xoay": "右鍵拖曳 / Ctrl：旋轉",
+  "Cuộn: phóng to": "滾輪：縮放",
+  "May": "縫製",
+  "Cắt": "裁剪",
+  "Vải": "布料",
+  "Kho": "倉儲",
+  "Đóng gói & xuất hàng": "包裝與出貨",
+  "Văn phòng": "辦公室",
+  "Phúc lợi": "員工福利",
+  "Tiện ích": "設施",
+  "L24 · ÉP KEO": "L24 · 壓襯",
+  "Xưởng may": "縫製車間",
+  "24 chuyền · 縫製區": "24 條產線 · 縫製區",
+  "Cổng chính": "正門",
+  "Đường N8": "N8 道路",
+  "Tổ trưởng": "組長",
+  "Chuyền trưởng": "線長",
+  "Quản đốc": "課長",
+  "Giám đốc xưởng": "廠長",
+  "Vượt chỉ tiêu": "超越目標",
+  "Đang chạy": "生產中",
+  "Chậm tiến độ": "進度落後",
+  "Áo polo nam": "男款 Polo 衫",
+  "Quần kaki": "卡其褲",
+  "Áo khoác gió": "防風外套",
+  "Áo sơ mi nữ": "女款襯衫",
+  "Quần short": "短褲",
+  "Áo thun basic": "基本款 T 恤",
+  "Váy liền": "連身裙",
+  "Áo hoodie": "連帽上衣",
+  "+10 XP khám phá": "+10 XP 探索經驗",
+  "Sản lượng hôm nay (sp)": "今日產量（件）",
+  "Mục tiêu / giờ": "每小時目標",
+  "Công nhân trên chuyền": "產線員工",
+  "Mã hàng đang may": "目前生產款式",
+  "Hiệu suất": "生產效率",
+  "Số liệu minh họa, chưa kết nối hệ thống sản xuất.": "示意數據，尚未串接生產系統。",
+  "Bay tới": "前往",
+  "Đóng": "關閉",
+  "Chuyền may · 縫製線": "縫製線",
+  "Không tìm thấy khu vực nào khớp.": "找不到符合條件的區域。",
+  "Kết thúc diễn tập": "結束演練",
+  "Hoàn thành diễn tập": "演練完成",
+  "người đã ra khỏi xưởng": "人已撤離工廠",
+  "Diễn tập thoát hiểm · đang sơ tán": "逃生演練 · 疏散中",
+  "Đã thoát:": "已撤離：",
+  "Đổi ngôn ngữ": "切換語言",
+  "Giao diện sáng": "淺色介面",
+  "Giao diện tối": "深色介面",
+  "Bản đồ thu nhỏ": "縮圖地圖"
+};
+const ZH_ZONES={
+  "xuathang2": [
+    "成品出貨區（2樓）",
+    "二樓成品出貨區，設有貨物升降設備通往一樓。"
+  ],
+  "vanphong": [
+    "辦公室",
+    "行政、生產計畫及業務辦公室。"
+  ],
+  "stairs": [
+    "通往二樓的樓梯",
+    "連接一樓與二樓的樓梯。"
+  ],
+  "phonghop": [
+    "會議室",
+    "主要會議室，用於客戶會議及例行工作會議。"
+  ],
+  "it": [
+    "IT 辦公室",
+    "負責伺服器、網路及生產系統支援。"
+  ],
+  "wc1": [
+    "洗手間",
+    "辦公區洗手間。"
+  ],
+  "khotulieu": [
+    "資料倉庫",
+    "存放檔案、技術資料及舊版紙樣。"
+  ],
+  "baove": [
+    "警衛室",
+    "位於 N8 道路正門旁，設有延伸雨棚及網窗，方便觀察進出車輛。"
+  ],
+  "sanhchinh": [
+    "正門大廳",
+    "正面入口：弧形門廳塔、NEW WIDE GROUP 標誌、迎賓雨棚及前方旗桿。"
+  ],
+  "baixetai": [
+    "出貨裝卸區",
+    "貨櫃車倒車至西側牆邊，對準二樓出貨口裝載成品。"
+  ],
+  "baicont": [
+    "貨櫃停放區",
+    "貨櫃停放等待裝貨或返回港口。"
+  ],
+  "nhaxe": [
+    "員工車棚",
+    "供員工停放機車的有頂車棚，鄰近 N8 道路入口。"
+  ],
+  "xuathang": [
+    "成品出貨區",
+    "成品紙箱集結後裝上貨櫃車。"
+  ],
+  "maymau": [
+    "樣品中心",
+    "製作確認樣、尺寸套樣及產前樣（PP Sample）。"
+  ],
+  "giat": [
+    "洗水室",
+    "試洗以檢驗縮水率及色牢度。"
+  ],
+  "lab": [
+    "實驗室",
+    "檢驗布料及副料。"
+  ],
+  "rap": [
+    "馬克室",
+    "設計紙樣及排版馬克圖，提供裁剪區使用。"
+  ],
+  "loivao": [
+    "訪客入口",
+    "迎賓大廳，連接正門與廠內。"
+  ],
+  "kiemvai": [
+    "驗布區",
+    "使用驗布機檢查布面瑕疵，再入主料倉。"
+  ],
+  "chuyennho": [
+    "小線",
+    "小批量訂單及樣品使用的小型縫製線。"
+  ],
+  "nhapnpl": [
+    "主副料進貨區",
+    "接收並清點供應商交付的布料與副料。"
+  ],
+  "vpkho": [
+    "倉庫辦公室",
+    "倉管人員辦公室，處理出入庫單據。"
+  ],
+  "khotp": [
+    "成品倉",
+    "存放已裝箱、等待出貨的成品。"
+  ],
+  "thangmay": [
+    "貨梯",
+    "將貨物運送至二樓的升降梯。"
+  ],
+  "dongthung": [
+    "包裝區",
+    "成品摺疊、入袋、貼標及裝箱。"
+  ],
+  "dongthung2": [
+    "包裝區 2",
+    "供急單使用的輔助裝箱區。"
+  ],
+  "say": [
+    "烘乾與冷卻區",
+    "工廠烘乾設備及冷卻系統。"
+  ],
+  "khomay": [
+    "備用車區",
+    "存放備用縫紉機，供產線設備故障時更換。"
+  ],
+  "wc2": [
+    "洗手間",
+    "生產區洗手間。"
+  ],
+  "qc": [
+    "驗貨室 1、2 · QA",
+    "品質檢驗（QC）及品質保證（QA）辦公室。"
+  ],
+  "xuongtruong": [
+    "廠長室",
+    "廠長及生產調度人員辦公室。"
+  ],
+  "hopsx": [
+    "生產會議室",
+    "班前會議、品質異常分析及產線進度檢討。"
+  ],
+  "nhansu": [
+    "驗貨室 3 · 人事 · 機修",
+    "第三驗貨室、人事部及機台維修組。"
+  ],
+  "kim": [
+    "針具管理區",
+    "依金屬異物管制規定發放針具及回收斷針。"
+  ],
+  "yte": [
+    "驗貨室 4 · 物資 · 醫務室",
+    "第四驗貨室、生產物資倉及醫務室。"
+  ],
+  "khopl": [
+    "副料倉",
+    "存放縫線、鈕扣、拉鍊、標籤及其他副料。"
+  ],
+  "xavai": [
+    "鬆布區",
+    "布卷鬆布靜置 24–48 小時，待尺寸穩定後再鋪布裁剪。"
+  ],
+  "khovai": [
+    "主料倉",
+    "主要布料倉庫，依色號及染色批次存放布卷。"
+  ],
+  "khucat": [
+    "裁剪區",
+    "鋪布、使用手持裁刀裁剪及裁片分捆編號。"
+  ],
+  "btp": [
+    "裁片區",
+    "已裁剪的半成品裁片束，等待配送至縫製線。"
+  ],
+  "tamton": [
+    "進貨待整理暫存區",
+    "進貨物料等待整理及分類。"
+  ],
+  "catday": [
+    "包邊裁剪區",
+    "裁剪縫製工序使用的包邊條及斜布條。"
+  ],
+  "maynen": [
+    "空壓機房",
+    "為壓合機、裁剪機及吹氣槍供應壓縮空氣。"
+  ],
+  "khovaict": [
+    "零碼及配布倉",
+    "存放零碼布及配布，棕色瓦屋頂依衛星影像呈現。"
+  ],
+  "nharac": [
+    "廢棄物集中區",
+    "集中存放廢棄物及碎布。"
+  ],
+  "khotam2": [
+    "暫存倉 2",
+    "暫存等待處理的物料。"
+  ],
+  "nhaan": [
+    "員工餐廳",
+    "員工用餐區，經東側內部道路的有頂走廊連接工廠。點選可掀開屋頂查看內部。"
+  ],
+  "bep": [
+    "廚房",
+    "供應員工餐廳餐點，設有穿過屋頂的排煙管。"
+  ],
+  "honuoc": [
+    "消防水池",
+    "消防系統儲水池，附設消防泵房。"
+  ],
+  "ktx": [
+    "員工宿舍",
+    "三層員工宿舍，陽台面向內部道路供晾曬衣物。點選可掀開屋頂查看房間。"
+  ]
+};
+const readPref=(key,fallback)=>{try{return localStorage.getItem(key)||fallback}catch(e){return fallback}};
+const savePref=(key,value)=>{try{localStorage.setItem(key,value)}catch(e){}};
+let locale=readPref('xm3d-lang','zh-Hant')==='vi'?'vi':'zh-Hant';
+let theme=readPref('xm3d-theme','dark')==='light'?'light':'dark';
+const tr=key=>locale==='vi'?key:(UI[key]??key);
+const zoneZh=z=>z.line?(z.line.n===24?'整燙／壓襯 · 24線':'第 '+z.line.n+' 線'):(ZH_ZONES[z.id]?.[0]||z.zh||z.vi);
+const zoneName=z=>locale==='vi'?z.vi:zoneZh(z);
+const zoneDesc=z=>locale==='vi'?z.d:z.line?(z.line.n===24?'整燙及壓襯線：在縫製前壓合領口、門襟及口袋的襯布。':'主要縫製線：接收裁剪區裁片，進行縫製組裝及線尾檢驗。'):(ZH_ZONES[z.id]?.[1]||z.d);
+function applyStaticLocale(){
+ document.documentElement.lang=locale;document.title=tr('Xưởng May 3D');
+ document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=tr(el.dataset.i18n));
+ ['aria-label','placeholder','title'].forEach(attr=>document.querySelectorAll('[data-i18n-'+attr+']').forEach(el=>el.setAttribute(attr,tr(el.getAttribute('data-i18n-'+attr)))));
+ const b=$('#langToggle');b.textContent=locale==='vi'?'繁體中文':'Tiếng Việt';b.lang=locale==='vi'?'zh-Hant':'vi';b.title=tr('Đổi ngôn ngữ');b.setAttribute('aria-label',b.title+' — '+b.textContent);
+}
+function applyTheme(){
+ document.documentElement.dataset.theme=theme;
+ const b=$('#themeToggle');b.textContent=theme==='dark'?'☀':'☾';b.title=tr(theme==='dark'?'Giao diện sáng':'Giao diện tối');b.setAttribute('aria-label',b.title);
+}
+applyStaticLocale();applyTheme();
+
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let seed=20260321;
 const rnd=()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
@@ -601,13 +929,19 @@ const ring=mesh(new THREE.TorusGeometry(1.4,.12,4,16),selMat,0,-50,0);ring.rotat
 
 // labels
 const labelsEl=$('#labels'),LBL=[];
-function addLabel(text,sub,pos,cls,lv,zone){const el=document.createElement('div');el.className='lbl '+cls;el.innerHTML=text+(sub?`<small>${sub}</small>`:'');labelsEl.appendChild(el);LBL.push({el,pos,lv,zone});return el}
+function addLabel(text,sub,pos,cls,lv,zone){const el=document.createElement('div');el.className='lbl '+cls;el.innerHTML=text+(sub?`<small>${sub}</small>`:'');labelsEl.appendChild(el);LBL.push({el,pos,lv,zone,rawText:text,rawSub:sub});return el}
 Z.forEach(z=>{const lv=z.lv??1,cls=z.line?'line':lv===0?'major':'';
   addLabel(z.line?(z.line.n===24?'L24 · ÉP KEO':'LINE '+z.line.n):z.vi,z.line?'':z.zh,new THREE.Vector3(z.R.cx,z.line?1.6:z.roofTop?z.roofTop+.8:2.4,z.R.cz),cls,lv,z)});
 addLabel('Xưởng may','24 chuyền · 縫製區',new THREE.Vector3(wx(1050),4,wz(222)),'major',0);
 addLabel('Cổng chính','正門',new THREE.Vector3(wx(-100),3.4,wz(415)),'major',0);
 addLabel('Đường N8','',new THREE.Vector3(wx(-178),.6,wz(140)),'major',0);
 EXITS.forEach(e=>addLabel('EXIT '+e.n,'',e.pos,'exit',0));
+function updateLabelLocale(){LBL.forEach(L=>{
+ const z=L.zone;
+ L.el.textContent=z?(z.line?(z.line.n===24?tr('L24 · ÉP KEO'):(locale==='vi'?'LINE ':'第 ')+z.line.n+(locale==='vi'?'':' 線')):zoneName(z)):L.rawText.startsWith('EXIT ')?(locale==='vi'?'EXIT ':'出口 ')+L.rawText.slice(5):tr(L.rawText);
+ if(!z&&L.rawSub&&L.rawSub!=='正門'){const small=document.createElement('small');small.textContent=tr(L.rawSub);L.el.appendChild(small)}
+});}
+updateLabelLocale();
 const v3=new THREE.Vector3();let showLbl=true;
 function drawLabels(){const w=canvas.clientWidth,h=canvas.clientHeight,zm=view.zoom;
   LBL.forEach(L=>{const vis=showLbl&&(L.lv===0||(L.lv===1&&zm>1.35)||(L.lv===2&&zm>1.9)||(L.zone&&L.zone===selected));
@@ -651,7 +985,7 @@ function pickAt(e){const r=canvas.getBoundingClientRect();ndc.set((e.clientX-r.l
 let hovered=null,selected=null;const tip=$('#tip');
 function setEm(z){if(z)z.mesh.material.emissive.set(z===selected?'#6b5200':z===hovered?'#3a3a3a':'#000000')}
 function hover(e){if(e.pointerType==='touch')return;const z=pickAt(e);if(z!==hovered){const o=hovered;hovered=z;setEm(o);setEm(z)}
-  canvas.classList.toggle('hover',!!z);if(z){tip.hidden=false;tip.textContent=z.vi;tip.style.left=e.clientX+'px';tip.style.top=e.clientY+'px'}else tip.hidden=true}
+  canvas.classList.toggle('hover',!!z);if(z){tip.hidden=false;tip.textContent=zoneName(z);tip.style.left=e.clientX+'px';tip.style.top=e.clientY+'px'}else tip.hidden=true}
 canvas.addEventListener('pointerleave',()=>{tip.hidden=true;const o=hovered;hovered=null;setEm(o)});
 function click(e){select(pickAt(e),false)}
 
@@ -674,30 +1008,30 @@ function select(z,fly=true){const o=selected;selected=z;setEm(o);
   renderCard(z,isNew);updateXP();markVisited();
   if(fly){goal.tx=z.R.cx;goal.tz=z.R.cz;goal.zoom=Math.max(goal.zoom,z.line?2.6:Math.min(3.2,Math.max(1.6,50/Math.max(z.R.w,z.R.d))))}
 }
-function renderCard(z,isNew){const c=CAT[z.cat];let h=`<div class="cat"><i style="background:${c.c}"></i>${c.n}${isNew?' · <span style="color:var(--safety)">+10 XP khám phá</span>':''}</div>
-  <h3>${z.vi}</h3>${z.zh?`<div class="zh">${z.zh}</div>`:''}<p>${z.d}</p>`;
+function renderCard(z,isNew){const c=CAT[z.cat];let h=`<div class="cat"><i style="background:${c.c}"></i>${tr(c.n)}${isNew?' · <span style="color:var(--safety)">'+tr('+10 XP khám phá')+'</span>':''}</div>
+  <h3>${zoneName(z)}</h3><p>${zoneDesc(z)}</p>`;
   if(z.line){const d=lineData(z.line.n),n=z.line.n===24?8:12;
-    h+=`<div class="row" style="margin-top:0;align-items:center;justify-content:space-between"><span class="pill" style="background:${d.st[1]};color:${d.st[2]}">${d.st[0]}</span><span style="font:600 12px var(--mono);color:var(--muted)">${d.code}</span></div>
-    <div class="kv"><div><b>${d.out.toLocaleString('vi-VN')}</b><span>Sản lượng hôm nay (sp)</span></div><div><b>${d.target}</b><span>Mục tiêu / giờ</span></div>
-    <div><b>${n}</b><span>Công nhân trên chuyền</span></div><div><b style="font-size:14px;line-height:1.3">${d.style}</b><span>Mã hàng đang may</span></div></div>
-    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px"><span>Hiệu suất</span><b style="color:var(--text)">${d.eff}%</b></div>
+    h+=`<div class="row" style="margin-top:0;align-items:center;justify-content:space-between"><span class="pill" style="background:${d.st[1]};color:${d.st[2]}">${tr(d.st[0])}</span><span style="font:600 12px var(--mono);color:var(--muted)">${d.code}</span></div>
+    <div class="kv"><div><b>${d.out.toLocaleString(locale==='vi'?'vi-VN':'zh-TW')}</b><span>${tr("Sản lượng hôm nay (sp)")}</span></div><div><b>${d.target}</b><span>${tr("Mục tiêu / giờ")}</span></div>
+    <div><b>${n}</b><span>${tr("Công nhân trên chuyền")}</span></div><div><b style="font-size:14px;line-height:1.3">${tr(d.style)}</b><span>${tr("Mã hàng đang may")}</span></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px"><span>${tr("Hiệu suất")}</span><b style="color:var(--text)">${d.eff}%</b></div>
     <div class="eff"><i style="width:${d.eff}%;background:${d.st[1]}"></i></div>
-    <div class="note">Số liệu minh họa, chưa kết nối hệ thống sản xuất.</div>`}
-  h+=`<div class="row"><button class="btn y" id="cFly" type="button">Bay tới</button><button class="btn" id="cClose" type="button">Đóng</button></div>`;
+    <div class="note">${tr("Số liệu minh họa, chưa kết nối hệ thống sản xuất.")}</div>`}
+  h+=`<div class="row"><button class="btn y" id="cFly" type="button">${tr("Bay tới")}</button><button class="btn" id="cClose" type="button">${tr("Đóng")}</button></div>`;
   card.innerHTML=h;card.hidden=false;
   $('#cFly').onclick=()=>select(z,true);$('#cClose').onclick=()=>select(null);}
 function updateXP(){const v=visited.size;let i=0;while(i<RANKS.length-1&&v>=RANKS[i+1][0])i++;
-  const a=RANKS[i][0],b=RANKS[Math.min(i+1,RANKS.length-1)][0];$('#rank').textContent=RANKS[i][1];
+  const a=RANKS[i][0],b=RANKS[Math.min(i+1,RANKS.length-1)][0];$('#rank').textContent=tr(RANKS[i][1]);
   $('#xpbar').style.width=(b>a?(v-a)/(b-a)*100:100)+'%';$('#xptxt').textContent=v+'/'+Z.length}
 function markVisited(){document.querySelectorAll('[data-z]').forEach(b=>{const v=visited.has(b.dataset.z);b.classList.toggle('v',v);const s=b.querySelector('.v');if(s)s.textContent=v?'✓':''})}
 
 function buildList(q=''){q=q.trim().toLowerCase();const L=$('#list');let h='';
-  const m=z=>!q||(z.vi+' '+z.zh+' '+z.id).toLowerCase().includes(q);
+  const m=z=>!q||(z.vi+' '+z.zh+' '+zoneZh(z)+' '+z.id).toLowerCase().includes(q);
   const lines=Z.filter(z=>z.line&&m(z));
-  if(lines.length)h+=`<div class="grp"><i style="background:${CAT.sewing.c}"></i>Chuyền may · 縫製線</div><div class="lines">`+lines.map(z=>`<button class="ln" type="button" data-z="${z.id}" title="${z.vi}">${z.line.n}</button>`).join('')+'</div>';
+  if(lines.length)h+=`<div class="grp"><i style="background:${CAT.sewing.c}"></i>${tr('Chuyền may · 縫製線')}</div><div class="lines">`+lines.map(z=>`<button class="ln" type="button" data-z="${z.id}" title="${zoneName(z)}">${z.line.n}</button>`).join('')+'</div>';
   ['sewing',...CAT_ORDER].forEach(c=>{const zs=Z.filter(z=>z.cat===c&&!z.line&&m(z));if(!zs.length)return;
-    h+=`<div class="grp"><i style="background:${CAT[c].c}"></i>${CAT[c].n}</div>`+zs.map(z=>`<button class="it" type="button" data-z="${z.id}">${z.vi}<span class="v"></span></button>`).join('')});
-  L.innerHTML=h||'<p style="color:var(--muted);padding:8px">Không tìm thấy khu vực nào khớp.</p>';
+    h+=`<div class="grp"><i style="background:${CAT[c].c}"></i>${tr(CAT[c].n)}</div>`+zs.map(z=>`<button class="it" type="button" data-z="${z.id}">${zoneName(z)}<span class="v"></span></button>`).join('')});
+  L.innerHTML=h||`<p style="color:var(--muted);padding:8px">${tr('Không tìm thấy khu vực nào khớp.')}</p>`;
   L.querySelectorAll('[data-z]').forEach(b=>b.onclick=()=>{select(ZI[b.dataset.z]);if(innerWidth<=720)$('#dir').classList.remove('open')});
   markVisited();if(selected)L.querySelectorAll(`[data-z="${selected.id}"]`).forEach(b=>b.classList.add('on'))}
 $('#q').addEventListener('input',e=>buildList(e.target.value));
@@ -720,20 +1054,34 @@ function startDrill(){if(drill.on)return resetDrill();
   Object.assign(drill,{on:true,t:0,done:0,fin:false});showW=true;$('#tWork').classList.add('on');
   W.forEach(w=>{w.path=w.pathPx.map(([x,y])=>[wx(x),wz(y)]);w.pi=1;w.out=false;w.counted=false;w.x=w.bx;w.z=w.bz});
   Object.assign(goal,{zoom:fitZoom(),tx:HOME.tx,tz:HOME.tz});select(null);
-  $('#vig').classList.add('on');$('#drill').textContent='Kết thúc diễn tập';dh.hidden=false;}
-function resetDrill(){drill.on=false;drill.fin=false;W.forEach(w=>{w.x=w.bx;w.z=w.bz;w.out=false});$('#vig').classList.remove('on');dh.hidden=true;$('#drill').textContent='Diễn tập thoát hiểm';alarmLight.intensity=0}
+  $('#vig').classList.add('on');$('#drill').textContent=tr('Kết thúc diễn tập');dh.hidden=false;renderDrill();}
+function resetDrill(){drill.on=false;drill.fin=false;W.forEach(w=>{w.x=w.bx;w.z=w.bz;w.out=false});$('#vig').classList.remove('on');dh.hidden=true;$('#drill').textContent=tr('Diễn tập thoát hiểm');alarmLight.intensity=0}
 $('#drill').onclick=startDrill;
 function stepDrill(dt){if(!drill.on||drill.fin)return;drill.t+=dt;
   W.forEach(w=>{if(w.out)return;let rem=w.sp*dt;
     while(rem>0&&w.pi<w.path.length){const [tx,tz]=w.path[w.pi],dx=tx-w.x,dz=tz-w.z,d=Math.hypot(dx,dz);
       if(d<=rem){w.x=tx;w.z=tz;rem-=d;if(w.pi>=w.ei&&!w.counted){w.counted=true;drill.done++}w.pi++}else{w.x+=dx/d*rem;w.z+=dz/d*rem;rem=0}}
     if(w.pi>=w.path.length){w.out=true;if(!w.counted){w.counted=true;drill.done++}}});
-  const tt=drill.t.toFixed(1);
-  if(drill.done>=W.length){drill.fin=true;$('#vig').classList.remove('on');alarmLight.intensity=0;
-    const st=drill.t<=20?3:drill.t<=28?2:1;
-    dh.innerHTML=`<div class="s">Hoàn thành diễn tập</div><div class="stars">${'★'.repeat(st)}${'☆'.repeat(3-st)}</div><div class="big">${tt}s</div><div class="s">${W.length}/${W.length} người đã ra khỏi xưởng</div>`;
-  }else dh.innerHTML=`<div class="s">Diễn tập thoát hiểm · đang sơ tán</div><div class="big">${tt}s</div><div class="s">Đã thoát: ${drill.done}/${W.length}</div>`;
+  if(drill.done>=W.length){drill.fin=true;$('#vig').classList.remove('on');alarmLight.intensity=0;}
+  renderDrill();
 }
+function renderDrill(){if(!drill.on)return;const tt=drill.t.toFixed(1);
+  if(drill.fin){
+    const st=drill.t<=20?3:drill.t<=28?2:1;
+    dh.innerHTML=`<div class="s">${tr("Hoàn thành diễn tập")}</div><div class="stars">${'★'.repeat(st)}${'☆'.repeat(3-st)}</div><div class="big">${tt}s</div><div class="s">${W.length}/${W.length} ${tr('người đã ra khỏi xưởng')}</div>`;
+  }else dh.innerHTML=`<div class="s">${tr("Diễn tập thoát hiểm · đang sơ tán")}</div><div class="big">${tt}s</div><div class="s">${tr("Đã thoát:")} ${drill.done}/${W.length}</div>`;
+}
+
+// Preferences: update existing UI without recreating the Three.js scene or resetting progress.
+$('#langToggle').onclick=()=>{
+ locale=locale==='vi'?'zh-Hant':'vi';savePref('xm3d-lang',locale);
+ applyStaticLocale();applyTheme();updateLabelLocale();buildList($('#q').value);updateXP();
+ if(selected)renderCard(selected,false);
+ if(hovered&&!tip.hidden)tip.textContent=zoneName(hovered);
+ $('#drill').textContent=tr(drill.on?'Kết thúc diễn tập':'Diễn tập thoát hiểm');
+ renderDrill();
+};
+$('#themeToggle').onclick=()=>{theme=theme==='dark'?'light':'dark';savePref('xm3d-theme',theme);applyTheme()};
 
 // minimap
 const mm=$('#mm'),mctx=mm.getContext('2d');let mmS=1,mmBase=null;
