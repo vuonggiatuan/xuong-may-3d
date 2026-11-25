@@ -141,7 +141,7 @@ html[lang="zh-Hant"]{--display:"Noto Sans TC","Microsoft JhengHei","PingFang TC"
  #brand .logo{flex-shrink:0;width:30px;height:30px}
  #brand .eyebrow{font-size:9px}
 }
-@media(min-width:721px) and (max-width:950px){#stats{max-width:calc(100vw - 245px)}#prefs .btn{padding:7px 8px 5px}}
+@media(min-width:721px) and (max-width:950px){#stats{max-width:calc(100vw - 245px);gap:5px}#prefs .btn{padding:7px 8px 5px}#stats .chip{min-width:0;padding:5px 7px 4px}#stats .chip b{font-size:17px}}
 </style>
 </head>
 <body>
@@ -156,7 +156,7 @@ html[lang="zh-Hant"]{--display:"Noto Sans TC","Microsoft JhengHei","PingFang TC"
     <div class="logo" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#2a2000" stroke-width="2.2" stroke-linecap="round"><path d="M4 20 19 5"/><circle cx="20.2" cy="3.8" r="1.6"/><path d="M8 20c3-1 4-5 8-6"/></svg>
     </div>
-    <div><div class="eyebrow" data-i18n="平面圖 · Tầng 1 · 第1頁">平面圖 · 1樓 · 第1頁</div><h1 data-i18n="Xưởng May 3D">3D 成衣工廠</h1></div>
+    <div><div class="eyebrow" data-i18n="Sơ đồ · Tầng 1 · Trang 1">平面圖 · 1樓 · 第1頁</div><h1 data-i18n="Xưởng May 3D">3D 成衣工廠</h1></div>
   </header>
 
   <div id="stats">
@@ -194,7 +194,7 @@ html[lang="zh-Hant"]{--display:"Noto Sans TC","Microsoft JhengHei","PingFang TC"
     <span class="sep"></span>
     <button class="btn r" id="drill" type="button" data-i18n="Diễn tập thoát hiểm">逃生演練</button>
   </nav>
-  <div id="hint">Kéo trái: di chuyển<br>Kéo phải / Ctrl: xoay<br data-i18n="Cuộn: phóng to">滾輪：縮放</div>
+  <div id="hint"><span data-i18n="Kéo trái: di chuyển">左鍵拖曳：移動</span><br><span data-i18n="Kéo phải / Ctrl: xoay">右鍵拖曳 / Ctrl：旋轉</span><br><span data-i18n="Cuộn: phóng to">滾輪：縮放</span></div>
   <div id="drillHud" hidden></div>
   <div id="tip" hidden></div>
 </div>
@@ -206,7 +206,7 @@ const $=s=>document.querySelector(s);
 
 const UI={
   "Xưởng May 3D": "3D 成衣工廠",
-  "平面圖 · Tầng 1 · 第1頁": "平面圖 · 1樓 · 第1頁",
+  "Sơ đồ · Tầng 1 · Trang 1": "平面圖 · 1樓 · 第1頁",
   "Mô hình 3D xưởng may": "成衣工廠 3D 模型",
   "Đang dựng xưởng…": "正在建立工廠模型…",
   "Chuyền may": "縫製線",
@@ -244,7 +244,7 @@ const UI={
   "Tiện ích": "設施",
   "L24 · ÉP KEO": "L24 · 壓襯",
   "Xưởng may": "縫製車間",
-  "24 chuyền · 縫製區": "24 條產線 · 縫製區",
+  "24 chuyền · Khu may": "24 條產線 · 縫製區",
   "Cổng chính": "正門",
   "Đường N8": "N8 道路",
   "Tổ trưởng": "組長",
@@ -271,7 +271,6 @@ const UI={
   "Số liệu minh họa, chưa kết nối hệ thống sản xuất.": "示意數據，尚未串接生產系統。",
   "Bay tới": "前往",
   "Đóng": "關閉",
-  "Chuyền may · 縫製線": "縫製線",
   "Không tìm thấy khu vực nào khớp.": "找不到符合條件的區域。",
   "Kết thúc diễn tập": "結束演練",
   "Hoàn thành diễn tập": "演練完成",
@@ -501,7 +500,7 @@ function applyStaticLocale(){
 }
 function applyTheme(){
  document.documentElement.dataset.theme=theme;
- const b=$('#themeToggle');b.textContent=theme==='dark'?'☀':'☾';b.title=tr(theme==='dark'?'Giao diện sáng':'Giao diện tối');b.setAttribute('aria-label',b.title);
+ const b=$('#themeToggle');b.textContent=theme==='dark'?'☀':'☾';b.title=tr(theme==='dark'?'Giao diện sáng':'Giao diện tối');b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed',String(theme==='light'));
 }
 applyStaticLocale();applyTheme();
 
@@ -932,7 +931,7 @@ const labelsEl=$('#labels'),LBL=[];
 function addLabel(text,sub,pos,cls,lv,zone){const el=document.createElement('div');el.className='lbl '+cls;el.innerHTML=text+(sub?`<small>${sub}</small>`:'');labelsEl.appendChild(el);LBL.push({el,pos,lv,zone,rawText:text,rawSub:sub});return el}
 Z.forEach(z=>{const lv=z.lv??1,cls=z.line?'line':lv===0?'major':'';
   addLabel(z.line?(z.line.n===24?'L24 · ÉP KEO':'LINE '+z.line.n):z.vi,z.line?'':z.zh,new THREE.Vector3(z.R.cx,z.line?1.6:z.roofTop?z.roofTop+.8:2.4,z.R.cz),cls,lv,z)});
-addLabel('Xưởng may','24 chuyền · 縫製區',new THREE.Vector3(wx(1050),4,wz(222)),'major',0);
+addLabel('Xưởng may','24 chuyền · Khu may',new THREE.Vector3(wx(1050),4,wz(222)),'major',0);
 addLabel('Cổng chính','正門',new THREE.Vector3(wx(-100),3.4,wz(415)),'major',0);
 addLabel('Đường N8','',new THREE.Vector3(wx(-178),.6,wz(140)),'major',0);
 EXITS.forEach(e=>addLabel('EXIT '+e.n,'',e.pos,'exit',0));
@@ -1026,9 +1025,9 @@ function updateXP(){const v=visited.size;let i=0;while(i<RANKS.length-1&&v>=RANK
 function markVisited(){document.querySelectorAll('[data-z]').forEach(b=>{const v=visited.has(b.dataset.z);b.classList.toggle('v',v);const s=b.querySelector('.v');if(s)s.textContent=v?'✓':''})}
 
 function buildList(q=''){q=q.trim().toLowerCase();const L=$('#list');let h='';
-  const m=z=>!q||(z.vi+' '+z.zh+' '+zoneZh(z)+' '+z.id).toLowerCase().includes(q);
+  const m=z=>!q||[z.vi,z.zh,zoneZh(z),z.id].some(v=>v.toLowerCase().includes(q)||v.toLowerCase().replace(/\s+/g,'').includes(q.replace(/\s+/g,'')));
   const lines=Z.filter(z=>z.line&&m(z));
-  if(lines.length)h+=`<div class="grp"><i style="background:${CAT.sewing.c}"></i>${tr('Chuyền may · 縫製線')}</div><div class="lines">`+lines.map(z=>`<button class="ln" type="button" data-z="${z.id}" title="${zoneName(z)}">${z.line.n}</button>`).join('')+'</div>';
+  if(lines.length)h+=`<div class="grp"><i style="background:${CAT.sewing.c}"></i>${tr('Chuyền may')}</div><div class="lines">`+lines.map(z=>`<button class="ln" type="button" data-z="${z.id}" title="${zoneName(z)}">${z.line.n}</button>`).join('')+'</div>';
   ['sewing',...CAT_ORDER].forEach(c=>{const zs=Z.filter(z=>z.cat===c&&!z.line&&m(z));if(!zs.length)return;
     h+=`<div class="grp"><i style="background:${CAT[c].c}"></i>${tr(CAT[c].n)}</div>`+zs.map(z=>`<button class="it" type="button" data-z="${z.id}">${zoneName(z)}<span class="v"></span></button>`).join('')});
   L.innerHTML=h||`<p style="color:var(--muted);padding:8px">${tr('Không tìm thấy khu vực nào khớp.')}</p>`;
